@@ -8,24 +8,30 @@ fetch(url)
 
 kanaps.forEach(kanap => { /* foreach*/
 
+let articleLink = document.createElement('a')
+        document.getElementById('items').appendChild(articleLink)
+        articleLink.href = `./product.html?id=${[kanap]._id}`;
+
+
 //Création élément Article
- const newElt = document.createElement('article')
+ let newElt = document.createElement('article')
         let elt = document.getElementById('items')
         elt.appendChild(newElt);
+        articleLink.appendChild(newElt)
 
  //Création élément Image       
-const articleImg = document.createElement('img')
+let articleImg = document.createElement('img')
         newElt.appendChild(articleImg)
         articleImg.src = kanap.imageUrl;
         articleImg.alt = kanap.altTxt;        
 
 //Création élément H3        
-const articleTitle = document.createElement('h3')
+let articleTitle = document.createElement('h3')
         newElt.appendChild(articleTitle);
         articleTitle.innerHTML = kanap.name;
 
 //Création élément P
-const articlePara = document.createElement('p')
+let articlePara = document.createElement('p')
         newElt.appendChild(articlePara);
         articlePara.innerHTML = kanap.description;
         });
