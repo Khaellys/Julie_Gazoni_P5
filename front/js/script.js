@@ -1,17 +1,16 @@
 const items = document.getElementById('items');
 const url = 'http://localhost:3000/api/products';   
 fetch(url)
-    .then((resp) => resp.json())
+    .then((resp) => resp.json()) //promise
     .then(function(data) {
         console.log(data);
-        let kanaps = data;      
+let kanaps = data;      
 
-kanaps.forEach(kanap => { /* foreach*/
+kanaps.forEach(kanap => { //exécute une fonction donnée sur chaque élément du tableau
 
 let articleLink = document.createElement('a')
         document.getElementById('items').appendChild(articleLink)
-        articleLink.href = `./product.html?id=${[kanap]._id}`;
-
+        articleLink.href = `./product.html?id=${kanap._id}`; 
 
 //Création élément Article
  let newElt = document.createElement('article')
