@@ -10,7 +10,7 @@ kanaps.forEach(kanap => { //exécute une fonction donnée sur chaque élément d
 
 let articleLink = document.createElement('a')
         document.getElementById('items').appendChild(articleLink)
-        articleLink.href = `./product.html?id=${kanap._id}`; 
+        articleLink.href = `./product.html?id=${kanap._id}`; //remplace dynamiquement les variables dans une string
 
 //Création élément Article
  let newElt = document.createElement('article')

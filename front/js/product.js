@@ -2,7 +2,6 @@ var str = window.location.href; //URL de la page courante
 var url = new URL(str);
 var articleId = url.searchParams.get("id");
 console.log(articleId);
-let kanap = "";
 
 getProduct(); 
 
@@ -31,17 +30,26 @@ document.querySelector('.item__img').appendChild(articleImg)
 articleImg.src = kanap.imageUrl;
 articleImg.alt = kanap.altTxt;
 
-//Modification du Nom
+// Insertion du Nom
 let articleName = document.getElementById('title')
 articleName.innerHTML = kanap.name;
 
-// Modification du prix
+// Insertion du prix
 let articlePrice = document.getElementById('price')
 articlePrice.innerHTML = kanap.price;
 
-//Modification de la Description
+// Insertion de la Description
 let articleDescription = document.getElementById('description')
 articleDescription.innerHTML = kanap.description;
+
+// Insertion des Couleurs
+for (let colors of kanap.colors){
+    console.table(colors)
+    let articleColor = document.createElement('option')
+    document.getElementById('colors').appendChild(articleColor);
+    articleColor.value = colors;
+    articleColor.innerHTML = colors;
+}
 }
 
 //.catch(function(error) {
