@@ -2,7 +2,7 @@ var page = window.location.href; //URL de la page courante
 var url = new URL(page);
 var articleId = url.searchParams.get("id");
 console.log(articleId);
-
+     
 getProduct(); 
 
 function getProduct() {
@@ -52,20 +52,54 @@ for (let colors of kanap.colors){
 }
 }
 
-// Panier
-function addToCart(kanap){
-    const addPanier = document.getElementById('addToCart');
-    addPanier.addEventListener('click', (event) => {
-// Conditions : quantité entre 1 et 100, et choix d'une couleur        
-        if(itemQuantity > 0 && itemQuantity <= 100 && articleColor > 0){
-        addPanier.innerHTML = "Article ajouté au panier";
-         } 
-    });
+// Gestion du panier
+
+let panier =[];
+
+const btnPanier = document.getElementById('addToCart');
+    btnPanier.addEventListener('click', function() /* (event)=> */ {
+
+        // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
+        /* if (Number.value > 0 && Number.value <= 100 && document.getElementById('colors').value =='') {
+            alert('Merci de choisir une couleur et une quantité');
+            return
+        } */
+
+         // Récupération de la couleur choisie
+        choixCouleur = document.getElementById('colors').value;
+        console.log(choixCouleur)
+
+        // Récupération de la quantité choisie
+        articleQuantity = Number(document.getElementById('quantity').value);
+        console.log(articleQuantity);
+
+          // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
+        if (Number(document.getElementById('quantity').value) <= 0 || Number(document.getElementById('quantity').value) > 100 || document.getElementById('colors').value.length <= 0) {
+            alert('Merci de choisir une couleur et une quantité');
+            return
+        } else {
+
+             panier.push({'couleur': choixCouleur, 'quantity' : articleQuantity, 'id' :articleId})
+         console.log(panier)
+         localStorage.panier = JSON.stringify(panier)
+        }       
+
+// Validation Panier
+const validationPanier = () => {
+    window.location.href = 'cart.html';
 }
 
-// Récupération dans le stockage local du panier
-localStorage.articleId = this.articleId;
-localStorage.articleColor = colors;
+validationPanier();
+
+    });
+
+
+    
+ //panier = JSON.parse(localStorage.getItem('panier'))
+       //console.log(panier)
+
+
+//localStorage.articleColor = colors;
 
 //.catch(function(error) {
     //console.log('Oups !... Une erreur est survenue ');
