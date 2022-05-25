@@ -57,31 +57,29 @@ for (let colors of kanap.colors){
 let panier =[];
 
 const btnPanier = document.getElementById('addToCart');
-    btnPanier.addEventListener('click', function() /* (event)=> */ {
-
-        // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
-        /* if (Number.value > 0 && Number.value <= 100 && document.getElementById('colors').value =='') {
-            alert('Merci de choisir une couleur et une quantité');
-            return
-        } */
+    btnPanier.addEventListener('click', function() {
 
          // Récupération de la couleur choisie
         choixCouleur = document.getElementById('colors').value;
-        console.log(choixCouleur)
 
         // Récupération de la quantité choisie
         articleQuantity = Number(document.getElementById('quantity').value);
-        console.log(articleQuantity);
 
-          // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
+        // Initialisation du local storage
+    //let panier = JSON.parse(localStorage.getItem('panier'))
+        
+        // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
         if (Number(document.getElementById('quantity').value) <= 0 || Number(document.getElementById('quantity').value) > 100 || document.getElementById('colors').value.length <= 0) {
             alert('Merci de choisir une couleur et une quantité');
             return
         } else {
 
-             panier.push({'couleur': choixCouleur, 'quantity' : articleQuantity, 'id' :articleId})
-         console.log(panier)
-         localStorage.panier = JSON.stringify(panier)
+        // Importation dans le local storage    
+        panier.push({'couleur': choixCouleur, 'quantity' : articleQuantity, 'id' :articleId})
+        console.log(panier)
+        localStorage.panier = JSON.stringify(panier)
+        //localStorage.panier = JSON.parse(panier)
+        
         }       
 
 // Validation Panier
@@ -91,7 +89,7 @@ const validationPanier = () => {
 
 validationPanier();
 
-    });
+});
 
 
     
@@ -99,7 +97,7 @@ validationPanier();
        //console.log(panier)
 
 
-//localStorage.articleColor = colors;
+
 
 //.catch(function(error) {
     //console.log('Oups !... Une erreur est survenue ');

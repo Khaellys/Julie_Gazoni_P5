@@ -1,3 +1,69 @@
+// Récupération des produits dans le local storage
+var kanap = JSON.parse(localStorage.panier)[0];
+console.table(kanap);
+itemPanier(kanap);
+
+function itemPanier(kanap){
+
+    // Création élément Article
+    let itemArticle = document.createElement('article');
+    document.querySelector('#cart__items').appendChild(itemArticle);
+    itemArticle.className = "cart__item";
+    itemArticle.setAttribute('data-id', kanap.id);
+    itemArticle.setAttribute('data-color', kanap.couleur);
+
+    // Création élément Div "img"
+    let itemDivImg = document.createElement('div');
+    itemArticle.appendChild(itemDivImg);
+    itemDivImg.className = 'cart__item__img';
+
+    // Création élément Image
+    let itemImg = document.createElement('img');
+    itemDivImg.appendChild(itemImg);
+    itemImg.src = kanap.imageUrl;
+    itemImg.alt = kanap.altTxt;
+
+    // Création élément Div "content"
+    let itemDivContent = document.createElement('div');
+    itemArticle.appendChild(itemDivContent);
+    itemDivContent.className = 'cart__item__content';
+
+    // Création élément Div "description"
+    let itemDivDescription = document.createElement('div');
+    itemDivContent.appendChild(itemDivDescription);
+    itemDivDescription.className ='cart__item__content__description';
+
+    // Création élément h2
+    let itemName = document.createElement('h2');
+    itemDivDescription.appendChild(itemName);
+    itemName.textContent = kanap.name;
+
+    // Création élément p "couleur"
+    let itemColor = document.createElement('p');
+    itemName.appendChild(itemColor);
+    itemColor.textContent = kanap.couleur;
+
+    // Création élément p "prix"
+
+    // Création élément Div "settings"
+    let itemDivSettings = document.createElement('div');
+    itemDivContent.appendChild(itemDivSettings);
+    itemDivSettings.className ='cart__item__content__settings';
+
+    // Création élément Div "quantité"
+    let itemDivQuantity = document.createElement('div');
+    itemDivSettings.appendChild(itemDivQuantity);
+    itemDivQuantity.className ='cart__item__content__settings__quantity';
+
+    // Création élément p "quantité"
+    let itemQuantity = document.createElement('p');
+    itemDivQuantity.appendChild(itemQuantity);
+    itemQuantity.textContent = `Qte : ${kanap.quantity}`;
+
+
+
+}
+
 // Création des expressions régulières avec Regex
 let regName = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
 let regMail = new RegExp("^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]\@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){2}\.[a-z]{2,3}$");
@@ -34,7 +100,7 @@ form.city.addEventListener('change', function() {
 });
 
 // Validation du champ prénom
-const validFirstName = function(inputFirstName) {
+const validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
     if (regName.test(inputFirstName.value)) {
@@ -45,7 +111,7 @@ const validFirstName = function(inputFirstName) {
 };
 
 // Validation du champ nom
-const validLastName = function(inputLastName) {
+const validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
     if (regName.test(inputLastName.value)) {
