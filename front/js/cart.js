@@ -1,27 +1,36 @@
-// Récupération des produits dans le local storage
-var kanap = JSON.parse(localStorage.panier)[0];
-console.table(kanap);
-itemPanier(kanap);
+let itemPanier = [];
 
-function itemPanier(kanap){
+
+// Récupération des produits dans le local storage
+var articleinLS = JSON.parse(localStorage.getItem("product"));
+console.table(articleinLS);
+
+// Récupération des données de l'API
+//const getItemPanier = async () => {
+
+    /* /* const res = await fetch(`http://localhost:3000/api/products`);
+    itemPanier = /* await res.json(); */ 
+
+// function itemPanier(kanap){
+for (let article in articleinLS){
 
     // Création élément Article
     let itemArticle = document.createElement('article');
     document.querySelector('#cart__items').appendChild(itemArticle);
     itemArticle.className = "cart__item";
-    itemArticle.setAttribute('data-id', kanap.id);
-    itemArticle.setAttribute('data-color', kanap.couleur);
+    itemArticle.setAttribute('data-id', articleinLS[article].id);
+    itemArticle.setAttribute('data-color', articleinLS[article].couleur);
 
     // Création élément Div "img"
     let itemDivImg = document.createElement('div');
     itemArticle.appendChild(itemDivImg);
     itemDivImg.className = 'cart__item__img';
 
-    // Création élément Image
+    // Création élément Image => Comment récupérer les images ?
     let itemImg = document.createElement('img');
     itemDivImg.appendChild(itemImg);
-    itemImg.src = kanap.imageUrl;
-    itemImg.alt = kanap.altTxt;
+    itemImg.src = articleinLS[article].imageUrl;
+    itemImg.alt = articleinLS[article].altTxt;
 
     // Création élément Div "content"
     let itemDivContent = document.createElement('div');
@@ -36,12 +45,12 @@ function itemPanier(kanap){
     // Création élément h2
     let itemName = document.createElement('h2');
     itemDivDescription.appendChild(itemName);
-    itemName.textContent = kanap.name;
+    itemName.textContent = articleinLS[article].name;
 
     // Création élément p "couleur"
     let itemColor = document.createElement('p');
     itemName.appendChild(itemColor);
-    itemColor.textContent = kanap.couleur;
+    itemColor.textContent = articleinLS[article].couleur;
 
     // Création élément p "prix"
 
@@ -58,11 +67,12 @@ function itemPanier(kanap){
     // Création élément p "quantité"
     let itemQuantity = document.createElement('p');
     itemDivQuantity.appendChild(itemQuantity);
-    itemQuantity.textContent = `Qte : ${kanap.quantity}`;
-
-
+    itemQuantity.textContent = `Qte : ${articleinLS[article].quantity}`;
 
 }
+//}
+
+// }
 
 // Création des expressions régulières avec Regex
 let regName = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");

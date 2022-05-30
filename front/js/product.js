@@ -53,52 +53,56 @@ for (let colors of kanap.colors){
 }
 
 // Gestion du panier
-
-let panier =[];
-
 const btnPanier = document.getElementById('addToCart');
     btnPanier.addEventListener('click', function() {
 
-         // Récupération de la couleur choisie
-        choixCouleur = document.getElementById('colors').value;
+// Récupération des options du produit 
+let optionPanier = {
+    name: kanap.name,
+    id: articleId,
+    color: colors.value,
+    quantity: Number(document.getElementById('quantity').value),
+        }
 
-        // Récupération de la quantité choisie
-        articleQuantity = Number(document.getElementById('quantity').value);
-
-        // Initialisation du local storage
-    //let panier = JSON.parse(localStorage.getItem('panier'))
-        
         // Conditions requises : quantité comprise entre 1 et 100 et couleur non nulle
         if (Number(document.getElementById('quantity').value) <= 0 || Number(document.getElementById('quantity').value) > 100 || document.getElementById('colors').value.length <= 0) {
             alert('Merci de choisir une couleur et une quantité');
             return
+        } 
+
+        // Confirmation d'ajout au panier 
+    const popupConfirmation = () => {
+        if (window.confirm(`${optionPanier.quantity} ${optionPanier.name} ${optionPanier.color} a été ajouté à votre panier :
+        OK pour consulter votre panier, ANNULER pour retourner à l'accueil`)) {
+        window.location.href = 'cart.html';
         } else {
+        window.location.href = 'index.html';
+    }
+  };
 
-        // Importation dans le local storage    
-        panier.push({'couleur': choixCouleur, 'quantity' : articleQuantity, 'id' :articleId})
-        console.log(panier)
-        localStorage.panier = JSON.stringify(panier)
-        //localStorage.panier = JSON.parse(panier)
-        
-        }       
+  // Récupération du local storage
+let articleinLS = JSON.parse(localStorage.getItem("product"));
 
-// Validation Panier
-const validationPanier = () => {
-    window.location.href = 'cart.html';
-}
+     // Produit(s) présent(s) dans le local storage 
+        if (articleinLS) {
 
-validationPanier();
+            // Si même ID et même couleur
+            let sameId = articleinLS.find(produit => produit.id == optionPanier.id && produit.color == optionPanier.color); 
+        if (sameId != undefined) {
+            sameId.quantity = Number(optionPanier.quantity += sameId.quantity);
+        } else {
+            articleinLS.push(optionPanier);
+        }
+        localStorage.setItem("product", JSON.stringify(articleinLS));
 
+        popupConfirmation();
+    }
+
+    // Pas de produit(s) dans le local storage 
+        else {
+        articleinLS = [];
+        articleinLS.push(optionPanier);
+        localStorage.setItem("product", JSON.stringify(articleinLS));
+        popupConfirmation();
+    }  
 });
-
-
-    
- //panier = JSON.parse(localStorage.getItem('panier'))
-       //console.log(panier)
-
-
-
-
-//.catch(function(error) {
-    //console.log('Oups !... Une erreur est survenue ');
-//});
