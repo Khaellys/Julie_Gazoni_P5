@@ -6,31 +6,40 @@ var articleinLS = JSON.parse(localStorage.getItem("product"));
 console.table(articleinLS);
 
 // Récupération des données de l'API
-//const getItemPanier = async () => {
+const getItemPanier = async () => {
 
-    /* /* const res = await fetch(`http://localhost:3000/api/products`);
-    itemPanier = /* await res.json(); */ 
+    const res = await fetch(`http://localhost:3000/api/products`);
+    itemPanier = await res.json();
 
-// function itemPanier(kanap){
-for (let article in articleinLS){
+    for (let index = 0; index < articleinLS.length ; index++) {
+        const IdinLS = articleinLS[index];
+        const IdinAPI = itemPanier.find(data => data._id === IdinLS.id);
+
+    displayCart(IdinLS, IdinAPI);    
+    }
+}
+
+getItemPanier() // Execution de la fonction
+
+const displayCart = (LocalId, IdAPI) => {
 
     // Création élément Article
     let itemArticle = document.createElement('article');
     document.querySelector('#cart__items').appendChild(itemArticle);
     itemArticle.className = "cart__item";
-    itemArticle.setAttribute('data-id', articleinLS[article].id);
-    itemArticle.setAttribute('data-color', articleinLS[article].couleur);
+    itemArticle.setAttribute('data-id', LocalId.id);
+    itemArticle.setAttribute('data-color', LocalId.couleur);
 
     // Création élément Div "img"
     let itemDivImg = document.createElement('div');
     itemArticle.appendChild(itemDivImg);
     itemDivImg.className = 'cart__item__img';
 
-    // Création élément Image => Comment récupérer les images ?
+    // Création élément Image 
     let itemImg = document.createElement('img');
     itemDivImg.appendChild(itemImg);
-    itemImg.src = articleinLS[article].imageUrl;
-    itemImg.alt = articleinLS[article].altTxt;
+    itemImg.src = IdAPI.imageUrl;
+    itemImg.alt = IdAPI.altTxt;
 
     // Création élément Div "content"
     let itemDivContent = document.createElement('div');
@@ -45,12 +54,12 @@ for (let article in articleinLS){
     // Création élément h2
     let itemName = document.createElement('h2');
     itemDivDescription.appendChild(itemName);
-    itemName.textContent = articleinLS[article].name;
+    itemName.textContent = LocalId.name;
 
     // Création élément p "couleur"
     let itemColor = document.createElement('p');
     itemName.appendChild(itemColor);
-    itemColor.textContent = articleinLS[article].couleur;
+    itemColor.textContent = LocalId.couleur;
 
     // Création élément p "prix"
 
@@ -67,12 +76,9 @@ for (let article in articleinLS){
     // Création élément p "quantité"
     let itemQuantity = document.createElement('p');
     itemDivQuantity.appendChild(itemQuantity);
-    itemQuantity.textContent = `Qte : ${articleinLS[article].quantity}`;
+    itemQuantity.textContent = `Qte : ${LocalId.quantity}`;
 
 }
-//}
-
-// }
 
 // Création des expressions régulières avec Regex
 let regName = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");

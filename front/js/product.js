@@ -3,7 +3,7 @@ var url = new URL(page);
 var articleId = url.searchParams.get("id");
 console.log(articleId);
      
-getProduct(); 
+getProduct(); // Execution de la fonction
 
 function getProduct() {
 const url = 'http://localhost:3000/api/products/'; 
