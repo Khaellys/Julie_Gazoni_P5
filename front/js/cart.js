@@ -21,7 +21,7 @@ const getItemPanier = async () => {
 
 getItemPanier() // Execution de la fonction
 
-const displayCart = (LocalId, IdAPI) => {
+const displayCart = (LocalId, IdAPI) => { 
 
     // Création élément Article
     let itemArticle = document.createElement('article');
@@ -59,9 +59,12 @@ const displayCart = (LocalId, IdAPI) => {
     // Création élément p "couleur"
     let itemColor = document.createElement('p');
     itemName.appendChild(itemColor);
-    itemColor.textContent = LocalId.couleur;
+    itemColor.textContent = LocalId.color;
 
     // Création élément p "prix"
+    let itemPrice = document.createElement('p');
+    itemName.appendChild(itemPrice);
+    itemPrice.textContent = IdAPI.price + ' €';
 
     // Création élément Div "settings"
     let itemDivSettings = document.createElement('div');
@@ -73,12 +76,76 @@ const displayCart = (LocalId, IdAPI) => {
     itemDivSettings.appendChild(itemDivQuantity);
     itemDivQuantity.className ='cart__item__content__settings__quantity';
 
-    // Création élément p "quantité"
-    let itemQuantity = document.createElement('p');
-    itemDivQuantity.appendChild(itemQuantity);
-    itemQuantity.textContent = `Qte : ${LocalId.quantity}`;
+    // Création élément p "quantité" // Revoir formule avec value
+    let itemQtt = document.createElement('p');
+    itemDivQuantity.appendChild(itemQtt);
+    itemQtt.textContent = `Qte : ${LocalId.quantity}`;
 
+    // Création élément "input"
+    let itemInputQtt = document.createElement('input');
+    itemInputQtt.setAttribute('type', 'number');
+    itemInputQtt.setAttribute('name', 'itemQuantity');
+    itemInputQtt.setAttribute('min', 1);
+    itemInputQtt.setAttribute('max', 100);
+    itemInputQtt.className = 'itemQuantity';
+    itemDivQuantity.appendChild(itemInputQtt);
 }
+
+//displayCart(/* LocalId, IdAPI */);
+
+async function getPrice(id) {
+    var myprice;
+    url = 'http://localhost:3000/api/products/'
+    finalurl = url + id
+    const data = await fetch(finalurl)
+    const json = await data.json();
+    myprice = json.price;
+    console.log('interne', myprice)
+   
+
+    return totalPrice;
+    }
+
+function getTotal(){
+
+    // Insertion des quantités totales
+//    var itemAmount = document.getElementsByClassName('itemQuantity');
+    var itemAmount = articleinLS;
+    var EltInArray = itemAmount.length;
+
+
+    /* let */ totalQtt = 0;
+
+    for (var i = 0; i < EltInArray; ++i) {
+        totalQtt += itemAmount[i].quantity; //Returns the value of the element, interpreted as one of the following, in order:A time value, A number, NaN if conversion is impossible (sources : developer.mozilla.org)
+        console.log('total quantity', totalQtt)
+       
+    }
+
+     let itemTotalQuantity = document.getElementById('totalQuantity');
+    itemTotalQuantity.innerHTML = totalQtt;
+    console.log(totalQtt);
+
+    // Insertion du prix total
+    /* let */ totalSum = 0;
+
+    for (var i = 0; i < EltInArray; ++i) {
+        
+        let quantity = itemAmount[i].quantity
+        let price = getPrice(itemAmount[i].id) // voir pour lui faire cracher le prix, moi je n'y arrive qu'en l'utilisant dans la fonction en elle même...
+        console.log("c'est la quantité", quantity)
+        console.log("c'est le prix", price)
+        totalSum += (quantity * price);
+        console.log('la somme', totalSum)
+        
+    }
+    let itemTotalSum = document.getElementById('totalPrice');
+        itemTotalSum.innerHTML = totalSum;
+        console.log('la somme a ajouter', totalSum);
+    
+}
+
+getTotal();
 
 // Création des expressions régulières avec Regex
 let regName = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
