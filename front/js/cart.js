@@ -1,5 +1,7 @@
 let itemPanier = [];
 
+// Insertion du prix total
+var totalSum = 0;
 
 // Récupération des produits dans le local storage
 var articleinLS = JSON.parse(localStorage.getItem("product"));
@@ -8,18 +10,62 @@ console.table(articleinLS);
 // Récupération des données de l'API
 const getItemPanier = async () => {
 
-    const res = await fetch(`http://localhost:3000/api/products`);
-    itemPanier = await res.json();
+const res = await fetch(`http://localhost:3000/api/products`);
+itemPanier = await res.json();
 
     for (let index = 0; index < articleinLS.length ; index++) {
         const IdinLS = articleinLS[index];
         const IdinAPI = itemPanier.find(data => data._id === IdinLS.id);
-
-    displayCart(IdinLS, IdinAPI);    
+        
+// Appel des fonctions
+        getPrice(IdinLS.id, IdinLS.quantity);
+        displayCart(IdinLS, IdinAPI);    
     }
 }
 
 getItemPanier() // Execution de la fonction
+
+// Récupération des prix à partir de l'API
+async function getPrice(id, quantity) {
+    console.log('ID récupéré', id)
+    var myprice;
+    url = 'http://localhost:3000/api/products/'
+    finalurl = url + id
+    const data = await fetch(finalurl)
+    const json = await data.json();
+    myprice = json.price;
+    console.log('interne', myprice)
+
+// Calcul de la somme totale    
+
+    console.log("c'est la quantité", quantity)
+    totalSum += (quantity * myprice);
+    console.log('la somme', totalSum)
+        
+        let itemTotalSum = document.getElementById('totalPrice');
+        itemTotalSum.innerHTML = totalSum;
+        console.log('la somme a ajouter', totalSum);
+    }
+
+function getTotal(){
+
+    // Insertion des quantités totales
+    var itemAmount = articleinLS;
+    var EltInArray = itemAmount.length;
+
+totalQtt = 0;
+
+    for (var i = 0; i < EltInArray; ++i) {
+        totalQtt += itemAmount[i].quantity; 
+        console.log('total quantity', totalQtt)
+    }
+
+    let itemTotalQuantity = document.getElementById('totalQuantity');
+    itemTotalQuantity.innerHTML = totalQtt;
+    console.log(totalQtt); 
+}
+
+getTotal();
 
 const displayCart = (LocalId, IdAPI) => { 
 
@@ -90,62 +136,6 @@ const displayCart = (LocalId, IdAPI) => {
     itemInputQtt.className = 'itemQuantity';
     itemDivQuantity.appendChild(itemInputQtt);
 }
-
-//displayCart(/* LocalId, IdAPI */);
-
-async function getPrice(id) {
-    var myprice;
-    url = 'http://localhost:3000/api/products/'
-    finalurl = url + id
-    const data = await fetch(finalurl)
-    const json = await data.json();
-    myprice = json.price;
-    console.log('interne', myprice)
-   
-
-    return totalPrice;
-    }
-
-function getTotal(){
-
-    // Insertion des quantités totales
-//    var itemAmount = document.getElementsByClassName('itemQuantity');
-    var itemAmount = articleinLS;
-    var EltInArray = itemAmount.length;
-
-
-    /* let */ totalQtt = 0;
-
-    for (var i = 0; i < EltInArray; ++i) {
-        totalQtt += itemAmount[i].quantity; //Returns the value of the element, interpreted as one of the following, in order:A time value, A number, NaN if conversion is impossible (sources : developer.mozilla.org)
-        console.log('total quantity', totalQtt)
-       
-    }
-
-     let itemTotalQuantity = document.getElementById('totalQuantity');
-    itemTotalQuantity.innerHTML = totalQtt;
-    console.log(totalQtt);
-
-    // Insertion du prix total
-    /* let */ totalSum = 0;
-
-    for (var i = 0; i < EltInArray; ++i) {
-        
-        let quantity = itemAmount[i].quantity
-        let price = getPrice(itemAmount[i].id) // voir pour lui faire cracher le prix, moi je n'y arrive qu'en l'utilisant dans la fonction en elle même...
-        console.log("c'est la quantité", quantity)
-        console.log("c'est le prix", price)
-        totalSum += (quantity * price);
-        console.log('la somme', totalSum)
-        
-    }
-    let itemTotalSum = document.getElementById('totalPrice');
-        itemTotalSum.innerHTML = totalSum;
-        console.log('la somme a ajouter', totalSum);
-    
-}
-
-getTotal();
 
 // Création des expressions régulières avec Regex
 let regName = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
