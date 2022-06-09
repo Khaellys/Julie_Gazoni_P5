@@ -23,7 +23,7 @@ itemPanier = await res.json();
     }
 }
 
-getItemPanier() // Execution de la fonction
+getItemPanier() // Exécution de la fonction
 
 // Récupération des prix à partir de l'API
 async function getPrice(id, quantity) {
@@ -49,7 +49,7 @@ async function getPrice(id, quantity) {
 
 function getTotal(){
 
-    // Insertion des quantités totales
+// Insertion des quantités totales
     var itemAmount = articleinLS;
     var EltInArray = itemAmount.length;
 
@@ -69,65 +69,65 @@ getTotal();
 
 const displayCart = (LocalId, IdAPI) => { 
 
-    // Création élément Article
+// Création élément Article
     let itemArticle = document.createElement('article');
     document.querySelector('#cart__items').appendChild(itemArticle);
     itemArticle.className = "cart__item";
     itemArticle.setAttribute('data-id', LocalId.id);
     itemArticle.setAttribute('data-color', LocalId.couleur);
 
-    // Création élément Div "img"
+// Création élément Div "img"
     let itemDivImg = document.createElement('div');
     itemArticle.appendChild(itemDivImg);
     itemDivImg.className = 'cart__item__img';
 
-    // Création élément Image 
+// Création élément Image 
     let itemImg = document.createElement('img');
     itemDivImg.appendChild(itemImg);
     itemImg.src = IdAPI.imageUrl;
     itemImg.alt = IdAPI.altTxt;
 
-    // Création élément Div "content"
+// Création élément Div "content"
     let itemDivContent = document.createElement('div');
     itemArticle.appendChild(itemDivContent);
     itemDivContent.className = 'cart__item__content';
 
-    // Création élément Div "description"
+// Création élément Div "description"
     let itemDivDescription = document.createElement('div');
     itemDivContent.appendChild(itemDivDescription);
     itemDivDescription.className ='cart__item__content__description';
 
-    // Création élément h2
+// Création élément h2
     let itemName = document.createElement('h2');
     itemDivDescription.appendChild(itemName);
     itemName.textContent = LocalId.name;
 
-    // Création élément p "couleur"
+// Création élément p "couleur"
     let itemColor = document.createElement('p');
     itemName.appendChild(itemColor);
     itemColor.textContent = LocalId.color;
 
-    // Création élément p "prix"
+// Création élément p "prix"
     let itemPrice = document.createElement('p');
     itemName.appendChild(itemPrice);
     itemPrice.textContent = IdAPI.price + ' €';
 
-    // Création élément Div "settings"
+// Création élément Div "settings"
     let itemDivSettings = document.createElement('div');
     itemDivContent.appendChild(itemDivSettings);
     itemDivSettings.className ='cart__item__content__settings';
 
-    // Création élément Div "quantité"
+// Création élément Div "quantité"
     let itemDivQuantity = document.createElement('div');
     itemDivSettings.appendChild(itemDivQuantity);
     itemDivQuantity.className ='cart__item__content__settings__quantity';
 
-    // Création élément p "quantité" // Revoir formule avec value
+// Création élément p "quantité" // Revoir formule avec value
     let itemQtt = document.createElement('p');
     itemDivQuantity.appendChild(itemQtt);
     itemQtt.textContent = `Qte : ${LocalId.quantity}`;
 
-    // Création élément "input"
+// Création élément "input"
     let itemInputQtt = document.createElement('input');
     itemInputQtt.setAttribute('type', 'number');
     itemInputQtt.setAttribute('name', 'itemQuantity');
@@ -135,6 +135,44 @@ const displayCart = (LocalId, IdAPI) => {
     itemInputQtt.setAttribute('max', 100);
     itemInputQtt.className = 'itemQuantity';
     itemDivQuantity.appendChild(itemInputQtt);
+
+// Supprimer un produit ==>    
+
+// Insertion de l'élément "div"
+    let itemDivSettingsDelete = document.createElement("div");
+    itemDivSettings.appendChild(itemDivSettingsDelete);
+    itemDivSettingsDelete.className = "cart__item__content__settings__delete";
+
+
+    let productSupprimer = document.createElement("p");
+    itemDivSettingsDelete.appendChild(productSupprimer);
+    productSupprimer.className = "deleteItem";
+    productSupprimer.innerHTML = "Supprimer";
+    productSupprimer.addEventListener("click", (e) => {
+        e.preventDefault;
+
+// Enregistrer l'id et la couleur sélectionnés par le bouton "Supprimer"
+        let deleteId = LocalId.id;
+        let deleteColor = LocalId.color;
+        console.log(LocalId, deleteId, deleteColor, articleinLS)
+
+// Filtrer l'élément cliqué par le bouton supprimer
+        newCart = articleinLS.filter( elt => elt.id !== deleteId || elt.color !== deleteColor);
+
+// Envoyer les nouvelles données dans le localStorage
+        localStorage.setItem('product', JSON.stringify(newCart));
+
+// Avertir de la suppression et recharger la page
+        alert('Votre article a bien été supprimé.');
+
+// Si pas de produits dans le local storage on affiche que le panier est vide
+        if (articleinLS.length === 0) {
+            localStorage.clear();
+        }
+       
+// Refresh rapide de la page - recalcul du prix
+        location.reload();
+    });
 }
 
 // Création des expressions régulières avec Regex
