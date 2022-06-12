@@ -37,14 +37,12 @@ async function getPrice(id, quantity) {
     console.log('interne', myprice)
 
 // Calcul de la somme totale    
-
     console.log("c'est la quantité", quantity)
     totalSum += (quantity * myprice);
     console.log('la somme', totalSum)
         
         let itemTotalSum = document.getElementById('totalPrice');
         itemTotalSum.innerHTML = totalSum;
-        console.log('la somme a ajouter', totalSum);
     }
 
 function getTotal(){
@@ -122,7 +120,7 @@ const displayCart = (LocalId, IdAPI) => {
     itemDivSettings.appendChild(itemDivQuantity);
     itemDivQuantity.className ='cart__item__content__settings__quantity';
 
-// Création élément p "quantité" // Revoir formule avec value
+// Création élément p "quantité"
     let itemQtt = document.createElement('p');
     itemDivQuantity.appendChild(itemQtt);
     itemQtt.textContent = `Qte : ${LocalId.quantity}`;
@@ -133,23 +131,65 @@ const displayCart = (LocalId, IdAPI) => {
     itemInputQtt.setAttribute('name', 'itemQuantity');
     itemInputQtt.setAttribute('min', 1);
     itemInputQtt.setAttribute('max', 100);
+    itemInputQtt.setAttribute('value', LocalId.quantity); 
     itemInputQtt.className = 'itemQuantity';
     itemDivQuantity.appendChild(itemInputQtt);
 
+// Modification d'une quantité
+function updateQtt() {
+    let modifQtt = document.querySelector('.itemQuantity');
+
+        for (let q = 0; modifQtt.length; q++) {
+            modifQtt[q].addEventListener('change', (event) => {
+                event.preventDefault();
+       
+       // Sélectionner l'élément à modifier
+        let qttModif = articleinLS[q].quantity;
+        let modifValue = itemInputQtt[q].valueAsNumber; 
+        console.log('value', modifValue);
+        console.log('modif', qttModif);   
+
+if (modifValue <= 0 || modifValue > 100) {
+            return alert('Merci de choisir une quantité comprise entre 1 et 100');
+    }
+
+    const qttToChange = articleinLS.find((el) => el.modifValue !== qttModif);
+    qttToChange.quantity = modifValue;
+    articleinLS[q].quantity = qttToChange.quantity;
+
+                localStorage.setItem('product', JSON.stringify(articleinLS));
+                location.reload();               
+            })
+}
+}
+updateQtt();
+
+   /*  itemInputQtt.addEventListener('change', (q) => {
+        LocalId.quantity = itemInputQtt.value;
+        q.preventDefault;
+        if (LocalId.quantity <= 0 || LocalId.quantity > 100) {
+            return alert('Merci de choisir une quantité comprise entre 1 et 100');
+    }
+    {
+    localStorage.setItem('product', JSON.stringify(articleinLS));
+    location.reload();
+    }
+}) */
+
 // Supprimer un produit ==>    
 
-// Insertion de l'élément "div"
-    let itemDivSettingsDelete = document.createElement("div");
+// Appel des éléments à supprimer
+    let itemDivSettingsDelete = document.createElement('div');
     itemDivSettings.appendChild(itemDivSettingsDelete);
-    itemDivSettingsDelete.className = "cart__item__content__settings__delete";
+    itemDivSettingsDelete.className = 'cart__item__content__settings__delete';
 
 
-    let productSupprimer = document.createElement("p");
+    let productSupprimer = document.createElement('p');
     itemDivSettingsDelete.appendChild(productSupprimer);
-    productSupprimer.className = "deleteItem";
-    productSupprimer.innerHTML = "Supprimer";
-    productSupprimer.addEventListener("click", (e) => {
-        e.preventDefault;
+    productSupprimer.className = 'deleteItem';
+    productSupprimer.innerHTML = 'Supprimer';
+    productSupprimer.addEventListener('click', (e) => {
+        e.preventDefault();
 
 // Enregistrer l'id et la couleur sélectionnés par le bouton "Supprimer"
         let deleteId = LocalId.id;
@@ -170,8 +210,8 @@ const displayCart = (LocalId, IdAPI) => {
             localStorage.clear();
         }
        
-// Refresh rapide de la page - recalcul du prix
-        location.reload();
+// Refresh rapide de la page et nouvel affichage du panier
+         location.reload();
     });
 }
 
