@@ -135,19 +135,44 @@ const displayCart = (LocalId, IdAPI) => {
     itemInputQtt.className = 'itemQuantity';
     itemDivQuantity.appendChild(itemInputQtt);
 
-// Modification d'une quantité
-function updateQtt() {
-    let modifQtt = document.querySelector('.itemQuantity');
 
-        for (let q = 0; modifQtt.length; q++) {
-            modifQtt[q].addEventListener('change', (event) => {
+   /*  / Insertion des quantités totales
+    var itemAmount = articleinLS;
+    var EltInArray = itemAmount.length;
+
+totalQtt = 0;
+
+    for (var i = 0; i < EltInArray; ++i) {
+        totalQtt += itemAmount[i].quantity; 
+        console.log('total quantity', totalQtt)
+    }
+
+    let itemTotalQuantity = document.getElementById('totalQuantity');
+    itemTotalQuantity.innerHTML = totalQtt;
+    console.log(totalQtt); 
+ */
+
+    // Modification d'une quantité
+
+
+function updateQtt() {
+    
+    let modifQtt = document.querySelectorAll('.itemQuantity')
+    let modifQttCount = modifQtt.length;
+    modifQtt = modifQtt[modifQttCount - 1];
+    console.log('modifQtt1', modifQtt)
+    console.log('local id', LocalId.id)
+
+        let q = 0; q < modifQtt.length; q++;
+            modifQtt.addEventListener('change', (event) => {
                 event.preventDefault();
+                console.log('quantité', q)
        
-       // Sélectionner l'élément à modifier
-        let qttModif = articleinLS[q].quantity;
-        let modifValue = itemInputQtt[q].valueAsNumber; 
-        console.log('value', modifValue);
+                // Sélectionner l'élément à modifier
+        let qttModif = articleinLS /* quantity */;
+        let modifValue = itemInputQtt.valueAsNumber;  
         console.log('modif', qttModif);   
+        console.log('value', modifValue);
 
 if (modifValue <= 0 || modifValue > 100) {
             return alert('Merci de choisir une quantité comprise entre 1 et 100');
@@ -155,26 +180,14 @@ if (modifValue <= 0 || modifValue > 100) {
 
     const qttToChange = articleinLS.find((el) => el.modifValue !== qttModif);
     qttToChange.quantity = modifValue;
+    console.log('qttToChange', qttToChange)
     articleinLS[q].quantity = qttToChange.quantity;
 
                 localStorage.setItem('product', JSON.stringify(articleinLS));
                 location.reload();               
             })
 }
-}
 updateQtt();
-
-   /*  itemInputQtt.addEventListener('change', (q) => {
-        LocalId.quantity = itemInputQtt.value;
-        q.preventDefault;
-        if (LocalId.quantity <= 0 || LocalId.quantity > 100) {
-            return alert('Merci de choisir une quantité comprise entre 1 et 100');
-    }
-    {
-    localStorage.setItem('product', JSON.stringify(articleinLS));
-    location.reload();
-    }
-}) */
 
 // Supprimer un produit ==>    
 
@@ -305,4 +318,20 @@ const validEmail = function(inputEmail) {
     }
 };
 
+}
+getForm();
+
+// Récupération des infos dans le local storage
+function postForm() {
+    const btnCommander = document.getElementById('order');
+    btnCommander.addEventListener('click', () => {
+
+        // Récupération du formulaire client
+        let inputFirstName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAddress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputEmail = document.getElementById('email');
+
+    });
 }
