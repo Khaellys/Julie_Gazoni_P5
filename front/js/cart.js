@@ -4,7 +4,7 @@ let itemPanier = []
 var totalSum = 0
 
 // Récupération des produits dans le local storage
-var articleinLS = JSON.parse(localStorage.getItem('product'))
+let articleinLS = JSON.parse(localStorage.getItem('product'))
 console.table(articleinLS)
 
 // Récupération des données de l'API
@@ -68,8 +68,10 @@ const displayCart = (LocalId, IdAPI) => {
   let itemArticle = document.createElement('article')
   document.querySelector('#cart__items').appendChild(itemArticle)
   itemArticle.className = 'cart__item'
-  itemArticle.setAttribute('data-id', LocalId.id)
-  itemArticle.setAttribute('data-color', LocalId.couleur)
+  //itemArticle.setAttribute('data-id', LocalId.id)
+  itemArticle.dataset.id = LocalId.id
+  //itemArticle.setAttribute('data-color', LocalId.color)
+  itemArticle.dataset.color = LocalId.color
 
   // Création élément Div "img"
   let itemDivImg = document.createElement('div')
@@ -139,12 +141,12 @@ const displayCart = (LocalId, IdAPI) => {
     console.log('modifQtt1', modifQtt)
     console.log('local id', LocalId.id)
 
-    let q = 0
-    q < modifQtt.length
-    q++
     modifQtt.addEventListener('change', (event) => {
-      event.preventDefault()
-      console.log('quantité', q)
+      const monInput = modifQtt
+      const parent = monInput.closest('article')
+      productId = parent.dataset.id
+      productColor = parent.dataset.color
+      console.log(parent, productId, productColor)
 
       // Sélectionner l'élément à modifier
       let qttModif = articleinLS /* quantity */
@@ -156,10 +158,13 @@ const displayCart = (LocalId, IdAPI) => {
         return alert('Merci de choisir une quantité comprise entre 1 et 100')
       }
 
-      const qttToChange = articleinLS.find((el) => el.modifValue !== qttModif)
+      const qttToChange = articleinLS.find(
+        (el) => el.id == productId && el.color == productColor,
+      )
+      console.log(qttToChange)
       qttToChange.quantity = modifValue
       console.log('qttToChange', qttToChange)
-      articleinLS[q].quantity = qttToChange.quantity
+      //articleinLS[q].quantity = qttToChange.quantity
 
       localStorage.setItem('product', JSON.stringify(articleinLS))
       location.reload()
@@ -285,8 +290,7 @@ function getForm() {
     if (regName.test(inputCity.value)) {
       cityErrorMsg.innerHTML = ''
     } else {
-      cityErrorMsg.innerHTML =
-        'Merci de renseigner votre code postal et votre ville'
+      cityErrorMsg.innerHTML = 'Merci de renseigner votre ville'
     }
   }
 
@@ -305,8 +309,10 @@ getForm()
 
 // Récupération des infos dans le local storage
 function postForm() {
-  const btnCommander = document.getElementById('order')
-  btnCommander.addEventListener('click', () => {
+  const form = document.querySelector('.cart__order__form')
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    
     // Récupération du formulaire client
     let inputFirstName = document.getElementById('firstName')
     let inputLastName = document.getElementById('lastName')
@@ -316,11 +322,12 @@ function postForm() {
 
     // Création d'un tableau pour récupérer les infos du/des produit(s)
     let itemsId = []
-    for (let i = 0; i < articleinLS[index].length; i++) {
+    for (let i = 0; i < articleinLS.length; i++) {
       itemsId.push(articleinLS[i].id)
     }
-    console.log(itemsId)
+    console.log('itemsId', itemsId)
 
+    // Récupération des infos client ET des articles dans un seul argument
     const order = {
       contact: {
         firstName: inputFirstName.value,
@@ -331,6 +338,8 @@ function postForm() {
       },
       products: itemsId,
     }
+    console.log('order', order)
+
     const options = {
       method: 'POST',
       body: JSON.stringify(order),
@@ -339,14 +348,17 @@ function postForm() {
         'Content-Type': 'application/json',
       },
     }
+
+    console.log('options', options)
+
     fetch('http://localhost:3000/api/products/order', options)
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        localStorage.clear()
-        localStorage.setItem('orderId', data.id)
+        //localStorage.clear();
+        localStorage.setItem('orderId', data.orderId)
 
-        document.location.href = 'confirmation.html'
+        document.location.href = './confirmation.html?orderId=' + data.orderId
       })
       .catch((error) => {
         alert('Il y a un problème avec fetch : ' + error.message)
