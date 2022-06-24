@@ -6,6 +6,7 @@ var totalSum = 0
 // Récupération des produits dans le local storage
 let articleinLS = JSON.parse(localStorage.getItem('product'))
 console.table(articleinLS)
+console.log('articleinLS', articleinLS)
 
 // Récupération des données de l'API
 const getItemPanier = async () => {
@@ -68,9 +69,9 @@ const displayCart = (LocalId, IdAPI) => {
   let itemArticle = document.createElement('article')
   document.querySelector('#cart__items').appendChild(itemArticle)
   itemArticle.className = 'cart__item'
-  //itemArticle.setAttribute('data-id', LocalId.id)
+  // remplace itemArticle.setAttribute('data-id', LocalId.id)
   itemArticle.dataset.id = LocalId.id
-  //itemArticle.setAttribute('data-color', LocalId.color)
+  // remplace itemArticle.setAttribute('data-color', LocalId.color)
   itemArticle.dataset.color = LocalId.color
 
   // Création élément Div "img"
@@ -312,7 +313,7 @@ function postForm() {
   const form = document.querySelector('.cart__order__form')
   form.addEventListener('submit', (e) => {
     e.preventDefault()
-    
+
     // Récupération du formulaire client
     let inputFirstName = document.getElementById('firstName')
     let inputLastName = document.getElementById('lastName')
@@ -355,7 +356,6 @@ function postForm() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        //localStorage.clear();
         localStorage.setItem('orderId', data.orderId)
 
         document.location.href = './confirmation.html?orderId=' + data.orderId
