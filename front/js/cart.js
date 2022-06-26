@@ -6,7 +6,6 @@ var totalSum = 0
 // Récupération des produits dans le local storage
 let articleinLS = JSON.parse(localStorage.getItem('product'))
 console.table(articleinLS)
-console.log('articleinLS', articleinLS)
 
 // Récupération des données de l'API
 const getItemPanier = async () => {
@@ -14,12 +13,12 @@ const getItemPanier = async () => {
   itemPanier = await res.json()
 
   for (let index = 0; index < articleinLS.length; index++) {
-    const IdinLS = articleinLS[index]
-    const IdinAPI = itemPanier.find((data) => data._id === IdinLS.id)
+    const localArticle = articleinLS[index]
+    const articleAPI = itemPanier.find((data) => data._id === localArticle.id)
 
     // Appel des fonctions
-    getPrice(IdinLS.id, IdinLS.quantity)
-    displayCart(IdinLS, IdinAPI)
+    getPrice(localArticle.id, localArticle.quantity)
+    displayCart(localArticle, articleAPI)
   }
 }
 
@@ -27,19 +26,15 @@ getItemPanier() // Exécution de la fonction
 
 // Récupération des prix à partir de l'API
 async function getPrice(id, quantity) {
-  console.log('ID récupéré', id)
   var myprice
   url = 'http://localhost:3000/api/products/'
   finalurl = url + id
   const data = await fetch(finalurl)
   const json = await data.json()
   myprice = json.price
-  console.log('interne', myprice)
 
   // Calcul de la somme totale
-  console.log("c'est la quantité", quantity)
   totalSum += quantity * myprice
-  console.log('la somme', totalSum)
 
   let itemTotalSum = document.getElementById('totalPrice')
   itemTotalSum.innerHTML = totalSum
@@ -54,7 +49,6 @@ function getTotal() {
 
   for (var i = 0; i < EltInArray; ++i) {
     totalQtt += itemAmount[i].quantity
-    console.log('total quantity', totalQtt)
   }
 
   let itemTotalQuantity = document.getElementById('totalQuantity')
@@ -64,15 +58,16 @@ function getTotal() {
 
 getTotal()
 
-const displayCart = (LocalId, IdAPI) => {
+const displayCart = (localProduct, productAPI) => {
+
   // Création élément Article
   let itemArticle = document.createElement('article')
   document.querySelector('#cart__items').appendChild(itemArticle)
   itemArticle.className = 'cart__item'
-  // remplace itemArticle.setAttribute('data-id', LocalId.id)
-  itemArticle.dataset.id = LocalId.id
-  // remplace itemArticle.setAttribute('data-color', LocalId.color)
-  itemArticle.dataset.color = LocalId.color
+  // remplace itemArticle.setAttribute('data-id', localProduct.id)
+  itemArticle.dataset.id = localProduct.id
+  // remplace itemArticle.setAttribute('data-color', localProduct.color)
+  itemArticle.dataset.color = localProduct.color
 
   // Création élément Div "img"
   let itemDivImg = document.createElement('div')
@@ -82,8 +77,8 @@ const displayCart = (LocalId, IdAPI) => {
   // Création élément Image
   let itemImg = document.createElement('img')
   itemDivImg.appendChild(itemImg)
-  itemImg.src = IdAPI.imageUrl
-  itemImg.alt = IdAPI.altTxt
+  itemImg.src = productAPI.imageUrl
+  itemImg.alt = productAPI.altTxt
 
   // Création élément Div "content"
   let itemDivContent = document.createElement('div')
@@ -98,17 +93,17 @@ const displayCart = (LocalId, IdAPI) => {
   // Création élément h2
   let itemName = document.createElement('h2')
   itemDivDescription.appendChild(itemName)
-  itemName.textContent = LocalId.name
+  itemName.textContent = localProduct.name
 
   // Création élément p "couleur"
   let itemColor = document.createElement('p')
   itemName.appendChild(itemColor)
-  itemColor.textContent = LocalId.color
+  itemColor.textContent = localProduct.color
 
   // Création élément p "prix"
   let itemPrice = document.createElement('p')
   itemName.appendChild(itemPrice)
-  itemPrice.textContent = IdAPI.price + ' €'
+  itemPrice.textContent = productAPI.price + ' €'
 
   // Création élément Div "settings"
   let itemDivSettings = document.createElement('div')
@@ -123,7 +118,7 @@ const displayCart = (LocalId, IdAPI) => {
   // Création élément p "quantité"
   let itemQtt = document.createElement('p')
   itemDivQuantity.appendChild(itemQtt)
-  itemQtt.textContent = `Qte : ${LocalId.quantity}`
+  itemQtt.textContent = `Qte : ${localProduct.quantity}`
 
   // Création élément "input"
   let itemInputQtt = document.createElement('input')
@@ -131,7 +126,7 @@ const displayCart = (LocalId, IdAPI) => {
   itemInputQtt.setAttribute('name', 'itemQuantity')
   itemInputQtt.setAttribute('min', 1)
   itemInputQtt.setAttribute('max', 100)
-  itemInputQtt.setAttribute('value', LocalId.quantity)
+  itemInputQtt.setAttribute('value', localProduct.quantity)
   itemInputQtt.className = 'itemQuantity'
   itemDivQuantity.appendChild(itemInputQtt)
 
@@ -139,8 +134,6 @@ const displayCart = (LocalId, IdAPI) => {
     let modifQtt = document.querySelectorAll('.itemQuantity')
     let modifQttCount = modifQtt.length
     modifQtt = modifQtt[modifQttCount - 1]
-    console.log('modifQtt1', modifQtt)
-    console.log('local id', LocalId.id)
 
     modifQtt.addEventListener('change', (event) => {
       const monInput = modifQtt
@@ -150,7 +143,7 @@ const displayCart = (LocalId, IdAPI) => {
       console.log(parent, productId, productColor)
 
       // Sélectionner l'élément à modifier
-      let qttModif = articleinLS /* quantity */
+      let qttModif = articleinLS
       let modifValue = itemInputQtt.valueAsNumber
       console.log('modif', qttModif)
       console.log('value', modifValue)
@@ -165,7 +158,6 @@ const displayCart = (LocalId, IdAPI) => {
       console.log(qttToChange)
       qttToChange.quantity = modifValue
       console.log('qttToChange', qttToChange)
-      //articleinLS[q].quantity = qttToChange.quantity
 
       localStorage.setItem('product', JSON.stringify(articleinLS))
       location.reload()
@@ -180,17 +172,17 @@ const displayCart = (LocalId, IdAPI) => {
   itemDivSettings.appendChild(itemDivSettingsDelete)
   itemDivSettingsDelete.className = 'cart__item__content__settings__delete'
 
-  let productSupprimer = document.createElement('p')
-  itemDivSettingsDelete.appendChild(productSupprimer)
-  productSupprimer.className = 'deleteItem'
-  productSupprimer.innerHTML = 'Supprimer'
-  productSupprimer.addEventListener('click', (e) => {
+  let productDelete = document.createElement('p')
+  itemDivSettingsDelete.appendChild(productDelete)
+  productDelete.className = 'deleteItem'
+  productDelete.innerHTML = 'Supprimer'
+  productDelete.addEventListener('click', (e) => {
     e.preventDefault()
 
     // Enregistrer l'id et la couleur sélectionnés par le bouton "Supprimer"
-    let deleteId = LocalId.id
-    let deleteColor = LocalId.color
-    console.log(LocalId, deleteId, deleteColor, articleinLS)
+    let deleteId = localProduct.id
+    let deleteColor = localProduct.color
+    console.log(localProduct, deleteId, deleteColor, articleinLS)
 
     // Filtrer l'élément cliqué par le bouton supprimer
     newCart = articleinLS.filter(
@@ -326,7 +318,6 @@ function postForm() {
     for (let i = 0; i < articleinLS.length; i++) {
       itemsId.push(articleinLS[i].id)
     }
-    console.log('itemsId', itemsId)
 
     // Récupération des infos client ET des articles dans un seul argument
     const order = {
@@ -339,7 +330,6 @@ function postForm() {
       },
       products: itemsId,
     }
-    console.log('order', order)
 
     const options = {
       method: 'POST',
@@ -349,8 +339,6 @@ function postForm() {
         'Content-Type': 'application/json',
       },
     }
-
-    console.log('options', options)
 
     fetch('http://localhost:3000/api/products/order', options)
       .then((response) => response.json())

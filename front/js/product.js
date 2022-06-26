@@ -1,7 +1,6 @@
 var page = window.location.href //URL de la page courante
 var url = new URL(page)
 var articleId = url.searchParams.get('id')
-console.log('id',articleId)
 
 getProduct() // Execution de la fonction
 
@@ -15,35 +14,35 @@ function getProduct() {
     // Répartition des données de l'API dans le DOM
     .then(async function (donneesAPI) {
       //promise
-      kanap = await donneesAPI
-      console.table(kanap)
-      if (kanap) {
-        callProduct(kanap)
+      product = await donneesAPI
+      console.table(product)
+      if (product) {
+        callProduct(product)
       }
     })
 }
 
-function callProduct(kanap) {
+function callProduct(product) {
   //Création élément Image
   let articleImg = document.createElement('img')
   document.querySelector('.item__img').appendChild(articleImg)
-  articleImg.src = kanap.imageUrl
-  articleImg.alt = kanap.altTxt
+  articleImg.src = product.imageUrl
+  articleImg.alt = product.altTxt
 
   // Insertion du Nom
   let articleName = document.getElementById('title')
-  articleName.innerHTML = kanap.name
+  articleName.innerHTML = product.name
 
   // Insertion du prix
   let articlePrice = document.getElementById('price')
-  articlePrice.innerHTML = kanap.price
+  articlePrice.innerHTML = product.price
 
   // Insertion de la Description
   let articleDescription = document.getElementById('description')
-  articleDescription.innerHTML = kanap.description
+  articleDescription.innerHTML = product.description
 
   // Insertion des Couleurs
-  for (let colors of kanap.colors) {
+  for (let colors of product.colors) {
     console.table(colors)
     let articleColor = document.createElement('option')
     document.getElementById('colors').appendChild(articleColor)
@@ -57,7 +56,7 @@ const btnPanier = document.getElementById('addToCart')
 btnPanier.addEventListener('click', function () {
   // Récupération des options du produit
   let optionPanier = {
-    name: kanap.name,
+    name: product.name,
     id: articleId,
     color: colors.value,
     quantity: Number(document.getElementById('quantity').value),

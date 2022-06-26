@@ -4,14 +4,13 @@ fetch(url)
   .then((resp) => resp.json()) //promise
   .then(function (data) {
     console.log(data)
-    let kanaps = data
+    let products = data
 
-    kanaps.forEach((kanap) => {
+    products.forEach((product) => {
       //exécute une fonction donnée sur chaque élément du tableau
-
       let articleLink = document.createElement('a')
       document.getElementById('items').appendChild(articleLink)
-      articleLink.href = `./product.html?id=${kanap._id}` //remplace dynamiquement les variables dans une string
+      articleLink.href = `./product.html?id=${product._id}` //remplace dynamiquement les variables dans une string
 
       //Création élément Article
       let newElt = document.createElement('article')
@@ -22,18 +21,18 @@ fetch(url)
       //Création élément Image
       let articleImg = document.createElement('img')
       newElt.appendChild(articleImg)
-      articleImg.src = kanap.imageUrl
-      articleImg.alt = kanap.altTxt
+      articleImg.src = product.imageUrl
+      articleImg.alt = product.altTxt
 
       //Création élément H3
       let articleTitle = document.createElement('h3')
       newElt.appendChild(articleTitle)
-      articleTitle.innerHTML = kanap.name
+      articleTitle.innerHTML = product.name
 
       //Création élément P
       let articlePara = document.createElement('p')
       newElt.appendChild(articlePara)
-      articlePara.innerHTML = kanap.description
+      articlePara.innerHTML = product.description
     })
   })
   .catch(function (error) {
