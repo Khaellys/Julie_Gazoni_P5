@@ -10,7 +10,7 @@ fetch(url)
       //exécute une fonction donnée sur chaque élément du tableau
       let articleLink = document.createElement('a')
       document.getElementById('items').appendChild(articleLink)
-      articleLink.href = `./product.html?id=${product._id}` //remplace dynamiquement les variables dans une string
+      articleLink.href = `./product.html?id=${product._id}` // Envoit sur la page du produit sélectionné
 
       //Création élément Article
       let newElt = document.createElement('article')

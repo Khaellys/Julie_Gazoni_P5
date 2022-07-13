@@ -59,7 +59,6 @@ function getTotal() {
 getTotal()
 
 const displayCart = (localProduct, productAPI) => {
-
   // Création élément Article
   let itemArticle = document.createElement('article')
   document.querySelector('#cart__items').appendChild(itemArticle)
@@ -192,7 +191,7 @@ const displayCart = (localProduct, productAPI) => {
     // Envoyer les nouvelles données dans le localStorage
     localStorage.setItem('product', JSON.stringify(newCart))
 
-    // Avertir de la suppression et recharger la page
+    // Avertir de la suppression
     alert('Votre article a bien été supprimé.')
 
     // Si pas de produits dans le local storage on affiche que le panier est vide

@@ -1,4 +1,4 @@
-var page = window.location.href //URL de la page courante
+var page = window.location.href // URL de la page courante
 var url = new URL(page)
 var articleId = url.searchParams.get('id')
 
